@@ -5,7 +5,7 @@ A PostgreSQL-focused Natural Language-to-SQL platform that converts business que
 The project is organized into two complementary pipelines, plus an optional fine-tuning bridge between them:
 
 - **Pipeline 1 – Schema, Business Context and Dataset Preparation:** extracts database metadata, builds business-aware context, and generates verified NL–SQL training/evaluation datasets.
-- **Pipeline 1.5 – QLoRA Fine-Tuning (optional):** consumes Pipeline 1's dataset artifacts and produces a domain-adapted LoRA adapter (optionally a merged GGUF model) that Pipeline 2 can serve via Ollama. This stage is not required for Pipeline 2 to run; it is an accuracy improvement path.
+- **Pipeline 1.5 – QLoRA Fine-Tuning:** consumes Pipeline 1's dataset artifacts and produces a domain-adapted LoRA adapter that Pipeline 2 can serve via Ollama. This stage is not required for Pipeline 2 to run; it is an accuracy improvement path.
 - **Pipeline 2 – NL2SQL Application and Query Execution:** accepts natural-language questions, invokes a configured language model, validates SQL, executes approved queries against PostgreSQL, and displays the returned data.
 
 > **Implementation note:** This README documents the repository behavior described in the supplied project context. It deliberately distinguishes implemented behavior from known configuration mismatches and limitations. Review the [Known limitations and configuration checks](#15-known-limitations-and-configuration-checks) section before using the application with a real database.
@@ -39,8 +39,8 @@ The project is organized into two complementary pipelines, plus an optional fine
   - [5.2 Input Artifact Contract](#52-input-artifact-contract)
   - [5.3 Prompt Construction](#53-prompt-construction)
   - [5.4 Training Procedure](#54-training-procedure)
-  - [5.5 Optional Continued Training (Second Epoch)](#55-optional-continued-training-second-epoch)
-  - [5.6 Optional GGUF Export and Ollama Registration](#56-optional-gguf-export-and-ollama-registration)
+  - [5.5 Optional Continued Training (Second Epoch)](#55-continued-training-second-epoch)
+  - [5.6 GGUF Export and Ollama Registration](#56-gguf-export-and-ollama-registration)
   - [5.7 Relationship to Pipeline 2](#57-relationship-to-pipeline-2)
   - [5.8 Fine-Tuning-Specific Limitations](#58-fine-tuning-specific-limitations)
 - [6. Pipeline 2 – NL2SQL Application](#6-pipeline-2--nl2sql-application)
@@ -137,7 +137,7 @@ Its principal objectives are:
                                       + Dataset Manifest
 
 
-                  PIPELINE 1.5  (OPTIONAL FINE-TUNING)
+                  PIPELINE 1.5  (FINE-TUNING)
           context.json + nl2sql_train_llm_refined.jsonl + nl2sql_dev.jsonl
                             |
                             v
@@ -147,7 +147,7 @@ Its principal objectives are:
                             v
                   final_adapter/ (LoRA weights)
                             |
-                            +--> (optional) GGUF export (q4_k_m)
+                            +--> GGUF export (q4_k_m)
                                        |
                                        v
                               ollama create / serve
@@ -195,7 +195,7 @@ Its principal objectives are:
                        Frontend Table / Charts
 ```
 
-Pipeline 1 prepares structured database and business knowledge. Pipeline 1.5 (optional) adapts a language model to that knowledge. Pipeline 2 is the interactive application that uses its configured schema/rule context and an LLM to answer user questions.
+Pipeline 1 prepares structured database and business knowledge. Pipeline 1.5 adapts a language model to that knowledge. Pipeline 2 is the interactive application that uses its configured schema/rule context and an LLM to answer user questions.
 
 The pipelines are complementary but not currently wired together as a fully automated deployment process. Pipeline 1 exports JSON/JSONL artifacts; Pipeline 2's checked-in schema and rule loaders currently expect SQL DDL and YAML files at different paths. Pipeline 1.5 consumes Pipeline 1 outputs under slightly different filenames than Pipeline 1 emits by default. See [Known limitations and configuration checks](#15-known-limitations-and-configuration-checks) and [Fine-Tuning-Specific Limitations](#58-fine-tuning-specific-limitations).
 
@@ -207,10 +207,10 @@ The pipelines are complementary but not currently wired together as a fully auto
 | Main inputs | Database URL, schema, business rules | Environment settings, PostgreSQL, model provider |
 | Main processing | Extraction, validation, enrichment, templating, verification and splitting | Prompt construction, model generation, SQL validation and execution |
 | Main outputs | `schema.json`, context files, JSONL datasets, manifest | SQL, query results, row count and correlation ID |
-| Main technologies | SQLAlchemy, SQLGlot, Pydantic, YAML, optional LLM | FastAPI, Ollama/cloud SDKs, SQLGlot, asyncpg, React |
+| Main technologies | SQLAlchemy, SQLGlot, Pydantic, YAML, LLM | FastAPI, Ollama/cloud SDKs, SQLGlot, asyncpg, React |
 | Execution style | Offline/preparation workflow | Request/response application |
 
-> The optional fine-tuning stage (Section 5) is not shown in this table; see [5.7 Relationship to Pipeline 2](#57-relationship-to-pipeline-2) for how it plugs in.
+> The fine-tuning stage (Section 5) is not shown in this table; see [5.7 Relationship to Pipeline 2](#57-relationship-to-pipeline-2) for how it plugs in.
 
 ---
 
@@ -223,7 +223,7 @@ The pipelines are complementary but not currently wired together as a fully auto
 | Context definition | YAML, JSON, Pydantic |
 | SQL parsing and validation | SQLGlot |
 | Context enrichment | Ollama or supported API-based LLM adapters |
-| Dataset generation | Python template/binding system, optional LLM realization |
+| Dataset generation | Python template/binding system, LLM realization |
 | Fine-tuning | Unsloth, TRL (`SFTTrainer`/`SFTConfig`), PEFT (LoRA), bitsandbytes (4-bit), `datasets` |
 | Model export | Unsloth GGUF export (`llama.cpp` converter), Ollama (`ollama create`) |
 | Backend API | FastAPI, Uvicorn, Pydantic |
@@ -951,7 +951,7 @@ The JSONL format stores one JSON record per line and is suitable for downstream 
 
 # 5. Pipeline 1.5 – QLoRA Fine-Tuning (Bridge Between Pipelines 1 and 2)
 
-An optional stage sits between Pipeline 1 and Pipeline 2. It consumes the JSON/JSONL artifacts produced by the Pipeline 1 dataset generator and produces a fine-tuned LoRA adapter (and optionally a merged GGUF model) that Pipeline 2's Ollama provider can serve as a domain-adapted NL2SQL model.
+An stage sits between Pipeline 1 and Pipeline 2. It consumes the JSON/JSONL artifacts produced by the Pipeline 1 dataset generator and produces a fine-tuned LoRA adapter (and a merged GGUF model) that Pipeline 2's Ollama provider can serve as a domain-adapted NL2SQL model.
 
 The workspace is `nl2sql-finetuning/` and is driven by `train_qlora_unsloth.py` plus a Colab notebook (`fine_tuning.ipynb`). Fine-tuning is not required for Pipeline 2 to function; it is an accuracy improvement path for a specific schema and business domain.
 
@@ -976,9 +976,9 @@ The workspace is `nl2sql-finetuning/` and is driven by `train_qlora_unsloth.py` 
                             v
                  outputs/nl2sql-qlora/final_adapter/
                             |
-                            +--> (optional) continued training / epoch 2 adapter
+                            +--> continued training / epoch 2 adapter
                             |
-                            +--> (optional) GGUF export (q4_k_m)
+                            +--> GGUF export (q4_k_m)
                                        |
                                        v
 
@@ -1035,7 +1035,7 @@ python train_qlora_unsloth.py \
   --epochs 1
 ```
 
-The example above overrides the script's default `--epochs 3.0` to run a single epoch; this matches the epoch-1 baseline used by the optional continued-training flow in 5.5.
+The example above overrides the script's default `--epochs 3.0` to run a single epoch; this matches the epoch-1 baseline used by the continued-training flow in 5.5.
 
 The script uses Unsloth `FastLanguageModel` with 4-bit loading and PEFT LoRA (`r=16`, `lora_alpha=16`, `lora_dropout=0.0`, `bias="none"`, Unsloth gradient checkpointing, `random_state=3407`, target modules `q/k/v/o/gate/up/down`). Training is driven by TRL `SFTTrainer`/`SFTConfig` with `packing=False`, cosine schedule, `warmup_ratio=0.05`, `weight_decay=0.01`, `adamw_8bit`, `eval_strategy="epoch"`, `save_strategy="epoch"`, `metric_for_best_model="eval_loss"`, and `report_to="none"`.
 
@@ -1055,7 +1055,7 @@ Default CLI arguments:
 
 The primary output is `outputs/nl2sql-qlora/final_adapter/` containing the LoRA weights and tokenizer files, and `run_metadata.json` at the output root (i.e., `outputs/nl2sql-qlora/run_metadata.json`). `run_metadata.json` records base model, split file paths, row counts, `test_used_during_training: false`, epochs, LR, max sequence length, LoRA rank, and quantization mode for reproducibility.
 
-## 5.5 Optional Continued Training (Second Epoch)
+## 5.5 Continued Training (Second Epoch)
 
 The Colab notebook demonstrates re-loading the epoch-1 adapter and training a second epoch. This assumes a one-epoch baseline was produced first (see 5.4's example invocation).
 
@@ -1066,7 +1066,7 @@ The Colab notebook demonstrates re-loading the epoch-1 adapter and training a se
 
 Continued training must use a **new** output directory; the notebook asserts the destination does not already exist to avoid overwriting the epoch-1 adapter.
 
-## 5.6 Optional GGUF Export and Ollama Registration
+## 5.6 GGUF Export and Ollama Registration
 
 For Pipeline 2 deployment on Ollama:
 
@@ -1084,7 +1084,7 @@ Then set `OLLAMA_MODEL=nl2sql-finetuned` in Pipeline 2's `.env`. Unsloth may ski
 
 ## 5.7 Relationship to Pipeline 2
 
-- Fine-tuning is **optional**; Pipeline 2 works with any configured `OLLAMA_MODEL` or cloud provider.
+- Pipeline 2 works with any configured `OLLAMA_MODEL` or cloud provider.
 - A fine-tuned model only improves behavior if Pipeline 2's prompt (schema + business rules + few-shot examples) is consistent with the prompt shape used during training (`DOMAIN AND BUSINESS CONTEXT` + `RELEVANT DATABASE SCHEMA` + `QUESTION` → SQL only). Diverging drastically (e.g., hard-coded few-shot examples for other domains, empty schema due to the known loader path mismatch) will degrade fine-tuned performance.
 - Because the trainer builds prompts from Pipeline 1's `context.json` (rich, per-example), while Pipeline 2's current loaders read SQL DDL and YAML at different paths, the cross-pipeline artifact contract is the same open issue flagged in [Known limitations and configuration checks](#15-known-limitations-and-configuration-checks) (see 15.1, 15.2, 15.12).
 - The test split (`nl2sql_test.jsonl`) is deliberately excluded from training and validation; evaluate on it only after hyperparameters are frozen.
@@ -1383,7 +1383,7 @@ In a separate terminal, download the configured model. For the documented defaul
 ollama pull qwen2.5-coder:7b
 ```
 
-If using a fine-tuned model produced by Pipeline 1.5, register it per [5.6](#56-optional-gguf-export-and-ollama-registration) and set `OLLAMA_MODEL` accordingly.
+If using a fine-tuned model produced by Pipeline 1.5, register it per [5.6](#56-gguf-export-and-ollama-registration) and set `OLLAMA_MODEL` accordingly.
 
 Confirm the model is available:
 
@@ -1875,7 +1875,7 @@ This example illustrates the normal user workflow after the database, backend an
 **Step 1 – Start dependencies**
 
 - Start PostgreSQL.
-- Start Ollama or configure a cloud provider. If using a fine-tuned model from Pipeline 1.5, ensure it has been registered with Ollama per [5.6](#56-optional-gguf-export-and-ollama-registration).
+- Start Ollama or configure a cloud provider. If using a fine-tuned model from Pipeline 1.5, ensure it has been registered with Ollama per [5.6](#56-gguf-export-and-ollama-registration).
 - Confirm that the backend can reach both dependencies.
 
 **Step 2 – Start the backend**
@@ -1929,7 +1929,7 @@ Use the correlation ID returned by the API to locate the corresponding backend l
 | Docker backend cannot connect to host PostgreSQL | Container uses its own `localhost` | Use a reachable host address or Docker service hostname |
 | Ollama connection error | Ollama is not running or host is incorrect | Run `ollama serve`; verify `OLLAMA_HOST` from the backend environment |
 | Model not found | Configured model is not installed | Run `ollama list` and pull the configured model |
-| Fine-tuned model not found | Ollama model not registered | Register GGUF per [5.6](#56-optional-gguf-export-and-ollama-registration) and set `OLLAMA_MODEL` |
+| Fine-tuned model not found | Ollama model not registered | Register GGUF per [5.6](#56-gguf-export-and-ollama-registration) and set `OLLAMA_MODEL` |
 | Frontend says API is unreachable | Backend is stopped or proxy/API base is incorrect | Check port 8000, Vite proxy configuration and browser Network tab |
 | Query returns HTTP 400 | Model generation, SQL validation or database execution failed | Inspect response `detail` and backend logs using the correlation ID |
 | Query returns HTTP 422 | Invalid request body | Ensure `query` is a non-empty string and provider is supported |
@@ -2128,7 +2128,7 @@ When modifying the application:
 | Fine-tuning | `outputs/nl2sql-qlora/final_adapter/` | LoRA adapter weights and tokenizer |
 | Fine-tuning | `outputs/nl2sql-qlora/run_metadata.json` | Reproducibility metadata (base model, epochs, LoRA rank, split counts) |
 | Fine-tuning | `outputs/nl2sql-qlora/checkpoint-*/` | Training checkpoints (subject to `save_total_limit`) |
-| Export (optional) | `<Model>.Q4_K_M.gguf` | Quantized model for Ollama |
+| Export | `<Model>.Q4_K_M.gguf` | Quantized model for Ollama |
 | Deployment | Ollama model (e.g., `nl2sql-finetuned`) | Served to Pipeline 2 via `OLLAMA_MODEL` |
 
 ## Pipeline 2
@@ -2169,4 +2169,4 @@ Add the applicable license, ownership, attribution and usage restrictions for th
 
 ## Maintainer Notes
 
-This README is intended to serve as the main technical entry point for developers setting up, running, evaluating and maintaining the pipelines (Pipeline 1, optional Pipeline 1.5 fine-tuning, and Pipeline 2). Keep it synchronized with actual source-code paths, environment variables, CLI flags and deployment configuration as the implementation evolves.
+This README is intended to serve as the main technical entry point for developers setting up, running, evaluating and maintaining the pipelines (Pipeline 1, Pipeline 1.5 fine-tuning, and Pipeline 2). Keep it synchronized with actual source-code paths, environment variables, CLI flags and deployment configuration as the implementation evolves.
