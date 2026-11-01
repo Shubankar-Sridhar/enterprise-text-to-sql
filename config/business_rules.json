@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "revenue": {
+      "definition": "Sum of order_items.price for delivered orders",
+      "conditions": ["orders.order_status = 'delivered'"],
+      "inclusions": ["order_items.price"],
+      "exclusions": ["orders.order_status = 'canceled'", "orders.order_status = 'processing'"]
+    },
+    "active_customer": {
+      "definition": "Customer with at least one delivered order",
+      "conditions": ["orders.order_status = 'delivered'"]
+    }
+  },
+  "terminology": {
+    "revenue": {"meaning": "Total sale value of delivered orders", "synonyms": ["sales", "turnover"]},
+    "customer": {"meaning": "Buyer in the customers table", "synonyms": ["buyer", "client"]},
+    "seller": {"meaning": "Merchant in the sellers table", "synonyms": ["vendor", "merchant"]},
+    "city": {"meaning": "City of the customer", "synonyms": ["location", "region"]}
+  }
+}
