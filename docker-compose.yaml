@@ -1,0 +1,82 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: nl2sql-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/app/config:ro
+      - ./backend:/app/backend
+      - ./logs:/app/logs
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - SERVICE_NAME=${SERVICE_NAME:-nl2sql-backend}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_DIR=/app/logs
+      - DEV_MODE=${DEV_MODE:-false}
+      
+      - OLLAMA_HOST=${OLLAMA_HOST}
+      - OLLAMA_MODEL=${OLLAMA_MODEL}
+      - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE}
+      - OLLAMA_TEMPERATURE=${OLLAMA_TEMPERATURE}
+      - OLLAMA_MAX_TOKENS=${OLLAMA_MAX_TOKENS}
+      - OLLAMA_TOP_P=${OLLAMA_TOP_P}
+      - OLLAMA_NUM_CTX=${OLLAMA_NUM_CTX}
+      - OLLAMA_AUTO_WARMUP=${OLLAMA_AUTO_WARMUP}
+      
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      
+      - DB_POOL_MIN_SIZE=${DB_POOL_MIN_SIZE}
+      - DB_POOL_MAX_SIZE=${DB_POOL_MAX_SIZE}
+      - QUERY_TIMEOUT_SECONDS=${QUERY_TIMEOUT_SECONDS}
+      - MAX_RESULT_ROWS=${MAX_RESULT_ROWS}
+      
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE}
+  
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - DEEPSEEK_MODEL=${DEEPSEEK_MODEL:-}
+      - DEEPSEEK_BASE_URL=${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-}
+      - CLOUD_LLM_TEMPERATURE=${CLOUD_LLM_TEMPERATURE:-0.1}
+      - CLOUD_LLM_MAX_TOKENS=${CLOUD_LLM_MAX_TOKENS:-2048}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    
+    restart: unless-stopped
+    networks:
+      - nl2sql-network
+
+  frontend_react:
+    build: ./frontend-react
+    container_name: nl2sql-frontend-react
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [nl2sql-network]
+
+networks:
+  nl2sql-network:
+    driver: bridge
+    name: nl2sql-network
