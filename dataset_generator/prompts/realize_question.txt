@@ -1,0 +1,38 @@
+You are given a description of a query in business terms.
+Write ONE natural-language question a business analyst would ask.
+
+Business context:
+- Intent: {intent}
+- Entity synonyms (choose ONE that fits naturally): {entity_synonyms}
+- Entity purpose: {entity_purpose}
+- Column synonyms (choose ONE if applicable): {column_synonyms}
+- Column purpose: {column_purpose}
+- Filter value (raw): {filter_value}
+- Filter value synonym (prefer this if not "(none)"): {filter_value_synonym}
+- Aggregate: {aggregate}
+- Top N: {top_n}
+- Threshold: {threshold}
+- Ambiguous term (may be empty): {ambiguous_term}
+- Disambiguation rule (may be empty): {disambiguation_rule}
+- Target difficulty: {difficulty}
+
+Hard rules (always apply):
+- Do NOT mention table names, column names, or SQL keywords.
+- Do NOT invent filters, joins, or aggregates not described above.
+- Prefer the filter value synonym over the raw value when one is provided.
+- Length: 6–25 words.
+
+Difficulty-specific rules:
+- "easy": single table, one filter or one aggregate.
+- "medium": may imply a relationship between two entities; may use a
+  metric synonym (e.g. "revenue"); may embed a time window.
+- "hard": may imply subqueries, cumulative figures, "top N", "who never",
+  "for each", or set operations. Do not name the operations explicitly.
+  If "ambiguous term" is set, use that term naturally — the question is
+  expected to be ambiguous at the surface and resolved by the disambiguation
+  rule.
+
+Hard constraints (never violate these):
+{forbidden_rules}
+
+Reply with JSON: {{"question": "..."}}
