@@ -1,0 +1,9 @@
+SQLAlchemy>=2.0,<3.0
+pandas>=2.0,<3.0
+psycopg[binary]>=3.1,<4.0
+PyYAML>=6.0,<7.0
+pydantic>=2.6,<3.0
+sqlglot>=25.0,<26.0
+python-dotenv>=1.0,<2.0
+requests
+jsonschema>=4.21,<5.0

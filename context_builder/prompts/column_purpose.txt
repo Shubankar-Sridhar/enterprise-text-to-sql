@@ -1,0 +1,26 @@
+You are given a single database column and must describe its business meaning.
+
+Column: {column_key}
+Type: {column_type}
+Nullable: {nullable}
+Belongs to table whose purpose is: {table_purpose}
+
+Observed sample values (may be empty): {sample_values}
+
+Existing purpose (if any): {existing_purpose}
+
+Return a JSON object with exactly these keys:
+- "purpose": one sentence, ≤ 15 words, business language, no SQL.
+- "synonyms": 0–4 business terms for this column. Lowercase. Omit if the
+  column name is already unambiguous (e.g. "id", "timestamp").
+- "value_map": always return an empty object {{}}. Do not attempt to
+  categorize values.
+- "notes": optional, ≤ 1 sentence, only if there is a rule the reader must know
+  (e.g. "only this value counts as revenue").
+
+Rules:
+- Never invent sample values.
+- If the existing purpose is good, keep it verbatim.
+- Do not put SQL in any field.
+
+Reply with JSON only.
