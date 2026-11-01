@@ -1,0 +1,19 @@
+forbidden_keywords:
+  - DROP
+  - DELETE
+  - INSERT
+  - UPDATE
+  - ALTER
+  - CREATE
+  - TRUNCATE
+  - MERGE
+  - GRANT
+  - REVOKE
+  - COMMIT
+  - ROLLBACK
+forbidden_patterns:
+  - pattern: "';"
+  - pattern: "OR\\s+1\\s*=\\s*1"
+  - pattern: "UNION\\s+SELECT"
+  - pattern: "--"
+  - pattern: "/\\*"
