@@ -1,0 +1,2361 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-10-14T10:19:43Z",
+  "domain": "e-commerce analytics",
+  "generator_model": "qwen3.5:4b",
+  "tables": {
+    "public.geolocation": {
+      "purpose": "Zip-code lookup with city, state, and coordinates for geographic joins",
+      "synonyms": [
+        "zip lookup",
+        "postal reference",
+        "location table",
+        "geo reference",
+        "location data",
+        "address mapping",
+        "geo lookup",
+        "spatial reference"
+      ],
+      "rules_refs": [],
+      "columns": {
+        "public.geolocation.geolocation_zip_code_prefix": {
+          "purpose": "First digits of a postal code used as a stable location key",
+          "synonyms": [
+            "zip prefix",
+            "postal code",
+            "pin code",
+            "zip",
+            "postal zone",
+            "area code"
+          ],
+          "value_map": {},
+          "notes": "Join key, not a display value. Never shown to end users.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.geolocation.geolocation_lat": {
+          "purpose": "Latitude of the zip code centroid",
+          "synonyms": [
+            "latitude",
+            "lat",
+            "y coordinate"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.geolocation.geolocation_lng": {
+          "purpose": "Longitude of the zip code centroid",
+          "synonyms": [
+            "longitude",
+            "lng",
+            "lon",
+            "x coordinate",
+            "east-west coordinate",
+            "geographic longitude"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.geolocation.geolocation_city": {
+          "purpose": "City the zip code belongs to",
+          "synonyms": [
+            "city",
+            "town",
+            "locality",
+            "municipality",
+            "city_name",
+            "urban_area"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.geolocation.geolocation_state": {
+          "purpose": "State the zip code belongs to",
+          "synonyms": [
+            "state",
+            "province",
+            "region",
+            "jurisdiction"
+          ],
+          "value_map": {},
+          "notes": "Ambiguous with customer_state and seller_state. See ambiguities.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        }
+      },
+      "provenance": {
+        "purpose": "rule",
+        "synonyms": "rule+llm"
+      },
+      "confidence": {
+        "purpose": 1.0,
+        "synonyms": 1.0
+      }
+    },
+    "public.customers": {
+      "purpose": "People or accounts that have placed at least one order",
+      "synonyms": [
+        "buyers",
+        "shoppers",
+        "clients",
+        "users",
+        "customer base",
+        "active customers",
+        "orderers"
+      ],
+      "rules_refs": [],
+      "columns": {
+        "public.customers.customer_id": {
+          "purpose": "Per-order pseudo-identity linking a customer to their orders",
+          "synonyms": [
+            "cust id",
+            "customer identifier",
+            "client ID",
+            "account key"
+          ],
+          "value_map": {},
+          "notes": "One physical person can have multiple customer_ids. Never expose raw.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.customers.customer_unique_id": {
+          "purpose": "Stable identity of a physical person across accounts",
+          "synonyms": [
+            "person id",
+            "buyer identity",
+            "unique customer",
+            "real customer id",
+            "customer identifier",
+            "person unique key",
+            "account owner id"
+          ],
+          "value_map": {},
+          "notes": "Use this, not customer_id, for any 'unique customers' count.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.customers.customer_zip_code_prefix": {
+          "purpose": "Customer's postal code prefix",
+          "synonyms": [
+            "customer zip",
+            "customer postal code",
+            "customer pin",
+            "zip prefix",
+            "postal prefix",
+            "area code"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.customers.customer_city": {
+          "purpose": "Customer's city of residence",
+          "synonyms": [
+            "customer city",
+            "city of buyer",
+            "where they live",
+            "home_city",
+            "residence_city",
+            "city_of_residence"
+          ],
+          "value_map": {},
+          "notes": "Ambiguous with seller_city and geolocation_city.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.customers.customer_state": {
+          "purpose": "Customer's state of residence",
+          "synonyms": [
+            "customer state",
+            "buyer state",
+            "customer region",
+            "state",
+            "location",
+            "region"
+          ],
+          "value_map": {
+            "Maharashtra": [
+              "MH",
+              "Maha"
+            ],
+            "Karnataka": [
+              "KA",
+              "Bengaluru state"
+            ],
+            "Delhi": [
+              "DL",
+              "NCR"
+            ],
+            "Tamil Nadu": [
+              "TN"
+            ],
+            "Gujarat": [
+              "GJ"
+            ],
+            "West Bengal": [
+              "WB",
+              "Bengal"
+            ]
+          },
+          "notes": "Ambiguous with seller_state and geolocation_state.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "value_map": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "value_map": 1.0,
+            "notes": 1.0
+          }
+        }
+      },
+      "provenance": {
+        "purpose": "rule",
+        "synonyms": "rule+llm"
+      },
+      "confidence": {
+        "purpose": 1.0,
+        "synonyms": 1.0
+      }
+    },
+    "public.sellers": {
+      "purpose": "Merchants who list and sell products on the marketplace",
+      "synonyms": [
+        "merchants",
+        "vendors",
+        "suppliers",
+        "marketplace partners",
+        "marketplace vendors",
+        "product sellers",
+        "merchant accounts"
+      ],
+      "rules_refs": [],
+      "columns": {
+        "public.sellers.seller_id": {
+          "purpose": "Unique merchant identifier",
+          "synonyms": [
+            "merchant_id",
+            "seller_id",
+            "vendor_id"
+          ],
+          "value_map": {},
+          "notes": "Never expose raw to end users.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6,
+            "notes": 1.0
+          }
+        },
+        "public.sellers.seller_zip_code_prefix": {
+          "purpose": "Seller's registered postal code prefix",
+          "synonyms": [
+            "seller zip",
+            "merchant postal code",
+            "zip code prefix",
+            "postal prefix",
+            "region identifier"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.sellers.seller_city": {
+          "purpose": "Seller's registered city",
+          "synonyms": [
+            "seller city",
+            "merchant city",
+            "where the seller ships from",
+            "city_of_origin",
+            "seller_location",
+            "operating_city"
+          ],
+          "value_map": {},
+          "notes": "Ambiguous with customer_city and geolocation_city.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.sellers.seller_state": {
+          "purpose": "Seller's registered state",
+          "synonyms": [
+            "seller state",
+            "merchant state",
+            "seller region"
+          ],
+          "value_map": {
+            "Maharashtra": [
+              "MH",
+              "Maha"
+            ],
+            "Karnataka": [
+              "KA"
+            ],
+            "Delhi": [
+              "DL",
+              "NCR"
+            ],
+            "Tamil Nadu": [
+              "TN"
+            ],
+            "West Bengal": [
+              "WB"
+            ],
+            "Gujarat": [
+              "GJ"
+            ]
+          },
+          "notes": "Ambiguous with customer_state and geolocation_state.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "value_map": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "value_map": 1.0,
+            "notes": 1.0
+          }
+        }
+      },
+      "provenance": {
+        "purpose": "rule",
+        "synonyms": "rule+llm"
+      },
+      "confidence": {
+        "purpose": 1.0,
+        "synonyms": 1.0
+      }
+    },
+    "public.orders": {
+      "purpose": "Confirmed purchases with a full lifecycle (approved → shipped → delivered)",
+      "synonyms": [
+        "purchases",
+        "transactions",
+        "sales",
+        "order book",
+        "completed orders",
+        "shipped items",
+        "delivered goods"
+      ],
+      "rules_refs": [
+        "gmv_excludes_undelivered"
+      ],
+      "columns": {
+        "public.orders.order_id": {
+          "purpose": "Unique identifier of an order",
+          "synonyms": [],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6
+          }
+        },
+        "public.orders.customer_id": {
+          "purpose": "The customer account that placed the order",
+          "synonyms": [
+            "customer_account",
+            "buyer_id",
+            "client_id"
+          ],
+          "value_map": {},
+          "notes": "Join to customers on this. Not the same as customer_unique_id.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6,
+            "notes": 1.0
+          }
+        },
+        "public.orders.order_status": {
+          "purpose": "Current lifecycle state of the order",
+          "synonyms": [
+            "status",
+            "state",
+            "order state",
+            "order_state",
+            "lifecycle_stage"
+          ],
+          "value_map": {
+            "delivered": [
+              "completed",
+              "fulfilled",
+              "shipped and received",
+              "delivered to customer"
+            ],
+            "shipped": [
+              "in transit",
+              "on the way",
+              "dispatched"
+            ],
+            "canceled": [
+              "cancelled",
+              "voided",
+              "aborted"
+            ],
+            "invoiced": [
+              "billed",
+              "invoice issued"
+            ],
+            "processing": [
+              "pending",
+              "being prepared"
+            ]
+          },
+          "notes": "Only 'delivered' counts as revenue. Never include 'shipped' or 'invoiced'.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "value_map": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "value_map": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.orders.order_purchase_timestamp": {
+          "purpose": "When the customer placed the order",
+          "synonyms": [
+            "purchase date",
+            "order date",
+            "when it was bought",
+            "order creation time",
+            "checkout timestamp"
+          ],
+          "value_map": {},
+          "notes": "All time-based questions default to this column unless stated otherwise.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.orders.order_approved_at": {
+          "purpose": "When payment was approved for the order",
+          "synonyms": [
+            "approval date",
+            "approved at",
+            "payment approved",
+            "payment approval time",
+            "order confirmation date",
+            "approval timestamp"
+          ],
+          "value_map": {},
+          "notes": "Null for orders that were never approved.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.orders.order_delivered_carrier_date": {
+          "purpose": "When the order was handed to the carrier",
+          "synonyms": [
+            "handed to carrier",
+            "dispatch date",
+            "carrier pickup",
+            "carrier handoff date",
+            "delivery pickup time",
+            "shipping dispatch date"
+          ],
+          "value_map": {},
+          "notes": "Null for orders that never shipped.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.orders.order_delivered_customer_date": {
+          "purpose": "When the order reached the customer",
+          "synonyms": [
+            "delivery date",
+            "delivered at",
+            "arrival date",
+            "customer receipt time",
+            "fulfillment completion"
+          ],
+          "value_map": {},
+          "notes": "Null for orders that were not delivered. The key column for delivery-time metrics.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.orders.order_estimated_delivery_date": {
+          "purpose": "The date the customer was promised the order",
+          "synonyms": [
+            "promised date",
+            "estimated arrival",
+            "ETA",
+            "estimated delivery date",
+            "delivery promise date",
+            "expected arrival date"
+          ],
+          "value_map": {},
+          "notes": "Always present. Used for on-time vs late-delivery comparisons.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        }
+      },
+      "provenance": {
+        "purpose": "rule",
+        "synonyms": "rule+llm"
+      },
+      "confidence": {
+        "purpose": 1.0,
+        "synonyms": 1.0
+      }
+    },
+    "public.products": {
+      "purpose": "Product catalog with pricing, category, and physical dimensions",
+      "synonyms": [
+        "catalog",
+        "items",
+        "SKUs",
+        "goods",
+        "merchandise",
+        "product list",
+        "inventory items",
+        "goods database"
+      ],
+      "rules_refs": [],
+      "columns": {
+        "public.products.product_id": {
+          "purpose": "Unique identifier of the product",
+          "synonyms": [],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6
+          }
+        },
+        "public.products.product_name": {
+          "purpose": "Display name of the product",
+          "synonyms": [
+            "product title",
+            "item name",
+            "product identifier",
+            "model description"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.products.product_category_name": {
+          "purpose": "Business category the product belongs to",
+          "synonyms": [
+            "category",
+            "product type",
+            "department",
+            "product classification",
+            "category type"
+          ],
+          "value_map": {
+            "Electronics and Mobiles": [
+              "electronics",
+              "mobiles",
+              "phones and gadgets"
+            ],
+            "Beauty and Personal Care": [
+              "beauty",
+              "personal care",
+              "cosmetics"
+            ],
+            "Sports and Fitness": [
+              "sports",
+              "fitness",
+              "sporting goods"
+            ],
+            "Books and Stationery": [
+              "books",
+              "stationery",
+              "reading material"
+            ],
+            "Home and Kitchen": [
+              "home",
+              "kitchen",
+              "household"
+            ]
+          },
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "value_map": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "value_map": 1.0
+          }
+        },
+        "public.products.price": {
+          "purpose": "Listed price of the product",
+          "synonyms": [
+            "catalog price",
+            "sticker price",
+            "retail price",
+            "selling price",
+            "unit price"
+          ],
+          "value_map": {},
+          "notes": "Not the same as order_items.price, which is the actual transaction price.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.products.selling_price": {
+          "purpose": "The price the product is currently sold at",
+          "synonyms": [
+            "current price",
+            "sale price",
+            "effective price",
+            "retail_price",
+            "list_price",
+            "sale_price"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.products.product_name_lenght": {
+          "purpose": "Character length of the product name",
+          "synonyms": [
+            "name length",
+            "title length",
+            "name_length",
+            "title_length",
+            "product_name_len"
+          ],
+          "value_map": {},
+          "notes": "Data-quality column, not business-meaningful.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.products.product_description_lenght": {
+          "purpose": "Character length of the product description",
+          "synonyms": [
+            "description length",
+            "body length",
+            "description_length",
+            "text_length",
+            "desc_len"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.products.product_photos_qty": {
+          "purpose": "Number of photos attached to the product listing",
+          "synonyms": [
+            "photo count",
+            "image count",
+            "number of photos",
+            "image quantity",
+            "gallery size"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.products.product_weight_g": {
+          "purpose": "Shipping weight of the product in grams",
+          "synonyms": [
+            "weight",
+            "product weight",
+            "grams",
+            "gross weight",
+            "package weight",
+            "total weight"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.products.product_length_cm": {
+          "purpose": "Length of the packaged product in centimeters",
+          "synonyms": [
+            "length",
+            "product length",
+            "package length",
+            "product height",
+            "item size"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.products.product_height_cm": {
+          "purpose": "Height of the packaged product in centimeters",
+          "synonyms": [
+            "height",
+            "product height"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.products.product_width_cm": {
+          "purpose": "Width of the packaged product in centimeters",
+          "synonyms": [
+            "width",
+            "product width"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        }
+      },
+      "provenance": {
+        "purpose": "rule",
+        "synonyms": "rule+llm"
+      },
+      "confidence": {
+        "purpose": 1.0,
+        "synonyms": 1.0
+      }
+    },
+    "public.order_items": {
+      "purpose": "Individual line items within an order",
+      "synonyms": [
+        "line items",
+        "order lines",
+        "items sold",
+        "order contents",
+        "order details",
+        "purchase items"
+      ],
+      "rules_refs": [],
+      "columns": {
+        "public.order_items.order_id": {
+          "purpose": "The parent order this line belongs to",
+          "synonyms": [
+            "parent_order_id",
+            "order_reference",
+            "order_key"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6
+          }
+        },
+        "public.order_items.order_item_id": {
+          "purpose": "Sequence number of the line within the order",
+          "synonyms": [
+            "line number",
+            "item sequence",
+            "line_item_id",
+            "order_line_key",
+            "item_reference"
+          ],
+          "value_map": {},
+          "notes": "Starts at 1 per order. Not globally unique on its own.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.order_items.product_id": {
+          "purpose": "The product on this line",
+          "synonyms": [
+            "product identifier",
+            "item id",
+            "sku"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6
+          }
+        },
+        "public.order_items.seller_id": {
+          "purpose": "The seller who fulfilled this line",
+          "synonyms": [
+            "fulfilling_seller",
+            "seller_id",
+            "vendor_id"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6
+          }
+        },
+        "public.order_items.shipping_limit_date": {
+          "purpose": "The deadline by which this line had to ship",
+          "synonyms": [
+            "ship by date",
+            "shipping deadline",
+            "must ship by",
+            "shipping_deadline",
+            "shipment_cutoff",
+            "delivery_deadline"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.order_items.price": {
+          "purpose": "Unit price of the item on this line",
+          "synonyms": [
+            "item price",
+            "unit price",
+            "unit cost",
+            "line price",
+            "item rate"
+          ],
+          "value_map": {},
+          "notes": "Not the same as payment_value. Sums of this column do NOT equal revenue.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        },
+        "public.order_items.freight_value": {
+          "purpose": "Freight charged for this line",
+          "synonyms": [
+            "shipping cost",
+            "freight",
+            "delivery fee",
+            "transportation charge"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        }
+      },
+      "provenance": {
+        "purpose": "rule",
+        "synonyms": "rule+llm"
+      },
+      "confidence": {
+        "purpose": 1.0,
+        "synonyms": 1.0
+      }
+    },
+    "public.order_payments": {
+      "purpose": "Payment records for orders, possibly split across multiple rows",
+      "synonyms": [
+        "payments",
+        "transactions",
+        "settlements",
+        "payment records",
+        "order payments",
+        "payment history",
+        "billing records"
+      ],
+      "rules_refs": [],
+      "columns": {
+        "public.order_payments.order_id": {
+          "purpose": "The order this payment applies to",
+          "synonyms": [
+            "order_reference",
+            "parent_order",
+            "linked_order"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6
+          }
+        },
+        "public.order_payments.payment_sequential": {
+          "purpose": "Sequence number of the payment within the order",
+          "synonyms": [
+            "payment number",
+            "payment sequence",
+            "payment_order",
+            "payment_index",
+            "payment_rank"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.order_payments.payment_type": {
+          "purpose": "The instrument used to pay",
+          "synonyms": [
+            "payment method",
+            "instrument",
+            "how they paid",
+            "payment instrument",
+            "mode of payment",
+            "payment mode"
+          ],
+          "value_map": {
+            "UPI": [
+              "unified payments",
+              "upi transfer"
+            ],
+            "Credit Card": [
+              "credit",
+              "cc"
+            ],
+            "Debit Card": [
+              "debit",
+              "dc"
+            ],
+            "Netbanking": [
+              "net banking",
+              "internet banking"
+            ],
+            "COD": [
+              "cash on delivery",
+              "pay on delivery"
+            ]
+          },
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "value_map": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "value_map": 1.0
+          }
+        },
+        "public.order_payments.payment_installments": {
+          "purpose": "Number of installments the payment was split into",
+          "synonyms": [
+            "installments",
+            "EMI count",
+            "number of payments",
+            "installment count",
+            "payment splits",
+            "installment quantity"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.order_payments.payment_value": {
+          "purpose": "Amount paid by this payment record",
+          "synonyms": [
+            "amount paid",
+            "payment amount",
+            "settled amount",
+            "transaction value",
+            "monetary value"
+          ],
+          "value_map": {},
+          "notes": "Sum across an order equals the order's total. This is the column metrics use.",
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "notes": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "notes": 1.0
+          }
+        }
+      },
+      "provenance": {
+        "purpose": "rule",
+        "synonyms": "rule+llm"
+      },
+      "confidence": {
+        "purpose": 1.0,
+        "synonyms": 1.0
+      }
+    },
+    "public.order_reviews": {
+      "purpose": "Customer reviews left after delivery",
+      "synonyms": [
+        "reviews",
+        "feedback",
+        "ratings",
+        "customer opinions",
+        "post-delivery feedback",
+        "order ratings",
+        "delivery comments"
+      ],
+      "rules_refs": [],
+      "columns": {
+        "public.order_reviews.review_id": {
+          "purpose": "Unique identifier of the review",
+          "synonyms": [],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6
+          }
+        },
+        "public.order_reviews.order_id": {
+          "purpose": "The order this review is about",
+          "synonyms": [
+            "order_reference",
+            "review_order_id",
+            "linked_order"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "llm"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 0.6
+          }
+        },
+        "public.order_reviews.review_score": {
+          "purpose": "Star rating the customer gave",
+          "synonyms": [
+            "rating",
+            "stars",
+            "score",
+            "review stars",
+            "customer rating",
+            "review score",
+            "star rating"
+          ],
+          "value_map": {
+            "5": [
+              "five stars",
+              "excellent",
+              "perfect"
+            ],
+            "4": [
+              "four stars",
+              "good"
+            ],
+            "3": [
+              "three stars",
+              "average",
+              "okay"
+            ],
+            "2": [
+              "two stars",
+              "poor"
+            ],
+            "1": [
+              "one star",
+              "terrible",
+              "very poor"
+            ]
+          },
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule",
+            "value_map": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0,
+            "value_map": 1.0
+          }
+        },
+        "public.order_reviews.review_comment_title": {
+          "purpose": "Short headline the customer wrote for the review",
+          "synonyms": [
+            "review title",
+            "headline",
+            "review summary",
+            "comment header",
+            "feedback headline"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.order_reviews.review_comment_message": {
+          "purpose": "Full text of the customer's review",
+          "synonyms": [
+            "review text",
+            "comment",
+            "review body",
+            "feedback text",
+            "review content",
+            "feedback message",
+            "customer comment"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.order_reviews.review_creation_date": {
+          "purpose": "When the review was written",
+          "synonyms": [
+            "review date",
+            "reviewed on",
+            "submission time",
+            "posting date"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        },
+        "public.order_reviews.review_answer_timestamp": {
+          "purpose": "When the marketplace replied to the review",
+          "synonyms": [
+            "response date",
+            "answered at"
+          ],
+          "value_map": {},
+          "notes": null,
+          "provenance": {
+            "purpose": "rule",
+            "synonyms": "rule"
+          },
+          "confidence": {
+            "purpose": 1.0,
+            "synonyms": 1.0
+          }
+        }
+      },
+      "provenance": {
+        "purpose": "rule",
+        "synonyms": "rule+llm"
+      },
+      "confidence": {
+        "purpose": 1.0,
+        "synonyms": 1.0
+      }
+    }
+  },
+  "metrics": {
+    "gmv": {
+      "definition_sql": "SUM(op.payment_value)\n",
+      "from_sql": "order_payments op JOIN orders o ON o.order_id = op.order_id\n",
+      "where_sql": "o.order_status = 'delivered'",
+      "synonyms": [
+        "gross merchandise value",
+        "total sales",
+        "revenue",
+        "topline"
+      ],
+      "notes": "Use this, not SUM(order_items.price), for any 'revenue' question."
+    },
+    "net_revenue": {
+      "definition_sql": "SUM(oi.price + oi.freight_value)\n",
+      "from_sql": "order_items oi JOIN orders o ON o.order_id = oi.order_id\n",
+      "where_sql": "o.order_status = 'delivered'",
+      "synonyms": [
+        "net revenue",
+        "net sales"
+      ],
+      "notes": "Includes freight. Prefer gmv for headline revenue questions."
+    },
+    "product_revenue": {
+      "definition_sql": "SUM(oi.price)\n",
+      "from_sql": "order_items oi JOIN orders o ON o.order_id = oi.order_id\n",
+      "where_sql": "o.order_status = 'delivered'",
+      "synonyms": [
+        "product revenue",
+        "item revenue",
+        "merchandise sales"
+      ],
+      "notes": null
+    },
+    "freight_revenue": {
+      "definition_sql": "SUM(oi.freight_value)\n",
+      "from_sql": "order_items oi JOIN orders o ON o.order_id = oi.order_id\n",
+      "where_sql": "o.order_status = 'delivered'",
+      "synonyms": [
+        "shipping revenue",
+        "freight income",
+        "delivery charges collected"
+      ],
+      "notes": null
+    },
+    "aov": {
+      "definition_sql": "SUM(op.payment_value) / NULLIF(COUNT(DISTINCT o.order_id), 0)\n",
+      "from_sql": "order_payments op JOIN orders o ON o.order_id = op.order_id\n",
+      "where_sql": "o.order_status = 'delivered'",
+      "synonyms": [
+        "average order value",
+        "basket size",
+        "average basket"
+      ],
+      "notes": null
+    },
+    "units_sold": {
+      "definition_sql": "COUNT(*)\n",
+      "from_sql": "order_items oi JOIN orders o ON o.order_id = oi.order_id\n",
+      "where_sql": "o.order_status = 'delivered'",
+      "synonyms": [
+        "units sold",
+        "items sold",
+        "quantity sold"
+      ],
+      "notes": null
+    },
+    "orders_placed": {
+      "definition_sql": "COUNT(DISTINCT o.order_id)\n",
+      "from_sql": "orders o\n",
+      "where_sql": null,
+      "synonyms": [
+        "order count",
+        "number of orders",
+        "orders"
+      ],
+      "notes": null
+    },
+    "delivered_orders": {
+      "definition_sql": "COUNT(DISTINCT o.order_id)\n",
+      "from_sql": "orders o\n",
+      "where_sql": "o.order_status = 'delivered'",
+      "synonyms": [
+        "completed orders",
+        "fulfilled orders"
+      ],
+      "notes": null
+    },
+    "canceled_orders": {
+      "definition_sql": "COUNT(DISTINCT o.order_id)\n",
+      "from_sql": "orders o\n",
+      "where_sql": "o.order_status = 'canceled'",
+      "synonyms": [
+        "cancellations",
+        "canceled count",
+        "aborted orders"
+      ],
+      "notes": null
+    },
+    "unique_customers": {
+      "definition_sql": "COUNT(DISTINCT c.customer_unique_id)\n",
+      "from_sql": "customers c\n",
+      "where_sql": null,
+      "synonyms": [
+        "unique buyers",
+        "distinct customers",
+        "real customer count"
+      ],
+      "notes": "Use customer_unique_id, not customer_id. customer_id is per-order."
+    },
+    "repeat_customers": {
+      "definition_sql": "COUNT(*)\n",
+      "from_sql": "(\n  SELECT c.customer_unique_id\n  FROM customers c\n  JOIN orders o ON o.customer_id = c.customer_id\n  GROUP BY c.customer_unique_id\n  HAVING COUNT(DISTINCT o.order_id) > 1\n) rc\n",
+      "where_sql": null,
+      "synonyms": [
+        "returning customers",
+        "loyal customers"
+      ],
+      "notes": null
+    },
+    "new_customers": {
+      "definition_sql": "COUNT(*)\n",
+      "from_sql": "(\n  SELECT c.customer_unique_id\n  FROM customers c\n  JOIN orders o ON o.customer_id = c.customer_id\n  GROUP BY c.customer_unique_id\n  HAVING COUNT(DISTINCT o.order_id) = 1\n) nc\n",
+      "where_sql": null,
+      "synonyms": [
+        "first-time buyers",
+        "one-time customers"
+      ],
+      "notes": null
+    },
+    "seller_count": {
+      "definition_sql": "COUNT(DISTINCT s.seller_id)\n",
+      "from_sql": "sellers s\n",
+      "where_sql": null,
+      "synonyms": [
+        "number of sellers",
+        "active merchants"
+      ],
+      "notes": null
+    },
+    "product_count": {
+      "definition_sql": "COUNT(DISTINCT p.product_id)\n",
+      "from_sql": "products p\n",
+      "where_sql": null,
+      "synonyms": [
+        "number of products",
+        "catalog size",
+        "sku count"
+      ],
+      "notes": null
+    },
+    "avg_review_score": {
+      "definition_sql": "AVG(r.review_score)\n",
+      "from_sql": "order_reviews r\n",
+      "where_sql": null,
+      "synonyms": [
+        "average rating",
+        "mean review score",
+        "average stars"
+      ],
+      "notes": null
+    },
+    "positive_review_rate": {
+      "definition_sql": "SUM(CASE WHEN r.review_score >= 4 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(*), 0)\n",
+      "from_sql": "order_reviews r\n",
+      "where_sql": null,
+      "synonyms": [
+        "positive review rate",
+        "satisfaction rate",
+        "happy customer rate"
+      ],
+      "notes": null
+    },
+    "negative_review_rate": {
+      "definition_sql": "SUM(CASE WHEN r.review_score <= 2 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(*), 0)\n",
+      "from_sql": "order_reviews r\n",
+      "where_sql": null,
+      "synonyms": [
+        "negative review rate",
+        "dissatisfaction rate"
+      ],
+      "notes": null
+    },
+    "avg_delivery_days": {
+      "definition_sql": "AVG(EXTRACT(EPOCH FROM (o.order_delivered_customer_date - o.order_purchase_timestamp)) / 86400.0)\n",
+      "from_sql": "orders o\n",
+      "where_sql": "o.order_delivered_customer_date IS NOT NULL",
+      "synonyms": [
+        "average delivery time",
+        "average shipping time",
+        "days to deliver"
+      ],
+      "notes": null
+    },
+    "late_delivery_rate": {
+      "definition_sql": "SUM(CASE WHEN o.order_delivered_customer_date > o.order_estimated_delivery_date THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(*), 0)\n",
+      "from_sql": "orders o\n",
+      "where_sql": "o.order_delivered_customer_date IS NOT NULL",
+      "synonyms": [
+        "late delivery rate",
+        "on-time failure rate",
+        "delivery SLA breach rate"
+      ],
+      "notes": null
+    },
+    "avg_installments": {
+      "definition_sql": "AVG(op.payment_installments)\n",
+      "from_sql": "order_payments op\n",
+      "where_sql": null,
+      "synonyms": [
+        "average installments",
+        "average EMI count"
+      ],
+      "notes": null
+    },
+    "avg_basket_items": {
+      "definition_sql": "COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT oi.order_id), 0)\n",
+      "from_sql": "order_items oi\n",
+      "where_sql": null,
+      "synonyms": [
+        "average items per order",
+        "basket depth",
+        "items per basket"
+      ],
+      "notes": null
+    },
+    "avg_freight_per_order": {
+      "definition_sql": "SUM(oi.freight_value) / NULLIF(COUNT(DISTINCT oi.order_id), 0)\n",
+      "from_sql": "order_items oi\n",
+      "where_sql": null,
+      "synonyms": [
+        "average shipping cost",
+        "average freight per order"
+      ],
+      "notes": null
+    }
+  },
+  "filters": {
+    "recent": {
+      "sql": "o.order_purchase_timestamp >= NOW() - INTERVAL '90 days'",
+      "synonyms": [
+        "last quarter",
+        "recent",
+        "last 3 months"
+      ]
+    },
+    "last_30_days": {
+      "sql": "o.order_purchase_timestamp >= NOW() - INTERVAL '30 days'",
+      "synonyms": [
+        "last month",
+        "past 30 days"
+      ]
+    },
+    "last_7_days": {
+      "sql": "o.order_purchase_timestamp >= NOW() - INTERVAL '7 days'",
+      "synonyms": [
+        "last week",
+        "past week",
+        "this week"
+      ]
+    },
+    "last_year": {
+      "sql": "o.order_purchase_timestamp >= NOW() - INTERVAL '365 days'",
+      "synonyms": [
+        "past year",
+        "trailing 12 months",
+        "TTM"
+      ]
+    },
+    "year_to_date": {
+      "sql": "o.order_purchase_timestamp >= DATE_TRUNC('year', NOW())",
+      "synonyms": [
+        "YTD",
+        "this year so far",
+        "current year to date"
+      ]
+    },
+    "month_to_date": {
+      "sql": "o.order_purchase_timestamp >= DATE_TRUNC('month', NOW())",
+      "synonyms": [
+        "MTD",
+        "this month so far"
+      ]
+    },
+    "prior_quarter": {
+      "sql": "o.order_purchase_timestamp >= DATE_TRUNC('quarter', NOW()) - INTERVAL '3 months' AND o.order_purchase_timestamp < DATE_TRUNC('quarter', NOW())",
+      "synonyms": [
+        "last quarter closed",
+        "previous quarter"
+      ]
+    },
+    "delivered_only": {
+      "sql": "o.order_status = 'delivered'",
+      "synonyms": [
+        "completed orders",
+        "fulfilled only",
+        "delivered only"
+      ]
+    },
+    "exclude_canceled": {
+      "sql": "o.order_status <> 'canceled'",
+      "synonyms": [
+        "not canceled",
+        "non-canceled"
+      ]
+    },
+    "in_flight": {
+      "sql": "o.order_status IN ('processing', 'invoiced', 'shipped')",
+      "synonyms": [
+        "in progress",
+        "open orders",
+        "not yet delivered"
+      ]
+    },
+    "active_customer": {
+      "sql": "c.customer_unique_id IN (\n  SELECT c2.customer_unique_id\n  FROM customers c2\n  JOIN orders o2 ON o2.customer_id = c2.customer_id\n  WHERE o2.order_purchase_timestamp >= NOW() - INTERVAL '180 days'\n)\n",
+      "synonyms": [
+        "active buyer",
+        "recent buyer"
+      ]
+    },
+    "lapsed_customer": {
+      "sql": "c.customer_unique_id NOT IN (\n  SELECT c2.customer_unique_id\n  FROM customers c2\n  JOIN orders o2 ON o2.customer_id = c2.customer_id\n  WHERE o2.order_purchase_timestamp >= NOW() - INTERVAL '180 days'\n)\n",
+      "synonyms": [
+        "churned customer",
+        "dormant customer",
+        "lapsed buyer"
+      ]
+    },
+    "repeat_customer": {
+      "sql": "c.customer_unique_id IN (\n  SELECT c3.customer_unique_id\n  FROM customers c3\n  JOIN orders o3 ON o3.customer_id = c3.customer_id\n  GROUP BY c3.customer_unique_id\n  HAVING COUNT(DISTINCT o3.order_id) > 1\n)\n",
+      "synonyms": [
+        "returning buyer",
+        "loyal customer"
+      ]
+    },
+    "new_customer": {
+      "sql": "c.customer_unique_id IN (\n  SELECT c3.customer_unique_id\n  FROM customers c3\n  JOIN orders o3 ON o3.customer_id = c3.customer_id\n  GROUP BY c3.customer_unique_id\n  HAVING COUNT(DISTINCT o3.order_id) = 1\n)\n",
+      "synonyms": [
+        "first-time buyer",
+        "one-time customer"
+      ]
+    },
+    "high_value_product": {
+      "sql": "p.price >= 10000",
+      "synonyms": [
+        "expensive product",
+        "premium product",
+        "high-ticket item"
+      ]
+    },
+    "budget_product": {
+      "sql": "p.price < 500",
+      "synonyms": [
+        "cheap product",
+        "budget item",
+        "low-cost product"
+      ]
+    },
+    "heavy_product": {
+      "sql": "p.product_weight_g >= 5000",
+      "synonyms": [
+        "heavy item",
+        "bulky product"
+      ]
+    },
+    "well_photographed": {
+      "sql": "p.product_photos_qty >= 3",
+      "synonyms": [
+        "well described",
+        "rich listing",
+        "complete listing"
+      ]
+    },
+    "high_rated": {
+      "sql": "r.review_score >= 4",
+      "synonyms": [
+        "well reviewed",
+        "positively rated",
+        "top rated"
+      ]
+    },
+    "low_rated": {
+      "sql": "r.review_score <= 2",
+      "synonyms": [
+        "poorly rated",
+        "badly reviewed",
+        "negatively rated"
+      ]
+    },
+    "with_review_text": {
+      "sql": "r.review_comment_message IS NOT NULL",
+      "synonyms": [
+        "with comments",
+        "has text review",
+        "written feedback"
+      ]
+    },
+    "without_review_text": {
+      "sql": "r.review_comment_message IS NULL",
+      "synonyms": [
+        "no comments",
+        "silent review",
+        "rating only"
+      ]
+    },
+    "late_delivery": {
+      "sql": "o.order_delivered_customer_date > o.order_estimated_delivery_date",
+      "synonyms": [
+        "late delivery",
+        "delivered after promise",
+        "SLA breach"
+      ]
+    },
+    "on_time_delivery": {
+      "sql": "o.order_delivered_customer_date <= o.order_estimated_delivery_date",
+      "synonyms": [
+        "on time",
+        "delivered as promised",
+        "met SLA"
+      ]
+    },
+    "slow_delivery": {
+      "sql": "o.order_delivered_customer_date - o.order_purchase_timestamp > INTERVAL '14 days'",
+      "synonyms": [
+        "slow delivery",
+        "took more than two weeks"
+      ]
+    },
+    "high_installments": {
+      "sql": "op.payment_installments >= 6",
+      "synonyms": [
+        "many installments",
+        "long EMI",
+        "financed purchase"
+      ]
+    },
+    "single_payment": {
+      "sql": "op.payment_installments = 1",
+      "synonyms": [
+        "paid in full",
+        "one shot payment",
+        "no installments"
+      ]
+    }
+  },
+  "forbidden": [
+    {
+      "id": "never_expose_raw_customer_id",
+      "rule": "Never SELECT customer_id in output columns. Use customer_unique_id for counting.",
+      "applies_to": [
+        "public.customers.customer_id",
+        "public.orders.customer_id"
+      ]
+    },
+    {
+      "id": "never_expose_raw_seller_id",
+      "rule": "Never SELECT seller_id in output columns.",
+      "applies_to": [
+        "public.sellers.seller_id",
+        "public.order_items.seller_id"
+      ]
+    },
+    {
+      "id": "never_expose_raw_order_id",
+      "rule": "Never SELECT order_id in output columns unless the question explicitly asks for a list of orders.",
+      "applies_to": [
+        "public.orders.order_id",
+        "public.order_items.order_id",
+        "public.order_payments.order_id",
+        "public.order_reviews.order_id"
+      ]
+    },
+    {
+      "id": "never_expose_raw_product_id",
+      "rule": "Never SELECT product_id in output columns unless the question asks for product identifiers.",
+      "applies_to": [
+        "public.products.product_id",
+        "public.order_items.product_id"
+      ]
+    },
+    {
+      "id": "never_expose_review_id",
+      "rule": "Never SELECT review_id.",
+      "applies_to": [
+        "public.order_reviews.review_id"
+      ]
+    },
+    {
+      "id": "never_expose_zip_prefix",
+      "rule": "Never SELECT zip code prefix columns in output. They are join keys.",
+      "applies_to": [
+        "public.customers.customer_zip_code_prefix",
+        "public.sellers.seller_zip_code_prefix",
+        "public.geolocation.geolocation_zip_code_prefix"
+      ]
+    },
+    {
+      "id": "never_expose_lat_lng",
+      "rule": "Never SELECT latitude or longitude. They are lookup values only.",
+      "applies_to": [
+        "public.geolocation.geolocation_lat",
+        "public.geolocation.geolocation_lng"
+      ]
+    },
+    {
+      "id": "never_expose_review_text",
+      "rule": "Never SELECT raw review text unless the question asks for review content.",
+      "applies_to": [
+        "public.order_reviews.review_comment_message",
+        "public.order_reviews.review_comment_title"
+      ]
+    },
+    {
+      "id": "no_cross_schema",
+      "rule": "Only join tables within the public schema.",
+      "applies_to": []
+    },
+    {
+      "id": "no_auth_schema",
+      "rule": "Never reference tables in the auth schema.",
+      "applies_to": []
+    },
+    {
+      "id": "no_storage_schema",
+      "rule": "Never reference tables in the storage schema.",
+      "applies_to": []
+    },
+    {
+      "id": "no_vault_schema",
+      "rule": "Never reference tables in the vault schema.",
+      "applies_to": []
+    },
+    {
+      "id": "no_realtime_schema",
+      "rule": "Never reference tables in the realtime schema.",
+      "applies_to": []
+    },
+    {
+      "id": "no_extensions_schema",
+      "rule": "Never reference tables in the extensions schema.",
+      "applies_to": []
+    },
+    {
+      "id": "no_pg_catalog",
+      "rule": "Never reference pg_catalog or information_schema.",
+      "applies_to": []
+    },
+    {
+      "id": "revenue_is_gmv",
+      "rule": "'revenue' must resolve to the gmv metric definition.",
+      "applies_to": []
+    },
+    {
+      "id": "revenue_not_order_items_price",
+      "rule": "SUM(order_items.price) is not revenue. Use gmv.",
+      "applies_to": []
+    },
+    {
+      "id": "revenue_not_orders_count",
+      "rule": "Revenue is a sum of amounts, not a count of orders.",
+      "applies_to": []
+    },
+    {
+      "id": "gmv_excludes_undelivered",
+      "rule": "gmv must always include order_status = 'delivered' in its WHERE clause.",
+      "applies_to": []
+    },
+    {
+      "id": "unique_customers_uses_unique_id",
+      "rule": "'Unique customers' must use customer_unique_id, never customer_id.",
+      "applies_to": []
+    },
+    {
+      "id": "order_count_uses_order_id",
+      "rule": "Order counts must use COUNT(DISTINCT order_id), never COUNT(*).",
+      "applies_to": []
+    },
+    {
+      "id": "units_sold_uses_order_items",
+      "rule": "Units sold must come from order_items, not orders.",
+      "applies_to": []
+    },
+    {
+      "id": "aov_uses_distinct_order_count",
+      "rule": "AOV denominator must be COUNT(DISTINCT order_id), never COUNT(*).",
+      "applies_to": []
+    },
+    {
+      "id": "average_review_uses_avg_not_sum",
+      "rule": "Average review score must use AVG, never SUM.",
+      "applies_to": []
+    },
+    {
+      "id": "positive_review_uses_score_ge_4",
+      "rule": "Positive reviews are review_score >= 4, not >= 3.",
+      "applies_to": []
+    },
+    {
+      "id": "negative_review_uses_score_le_2",
+      "rule": "Negative reviews are review_score <= 2, not <= 1.",
+      "applies_to": []
+    },
+    {
+      "id": "delivery_days_uses_customer_date",
+      "rule": "Delivery time must use order_delivered_customer_date, not order_delivered_carrier_date.",
+      "applies_to": []
+    },
+    {
+      "id": "late_delivery_uses_estimated_date",
+      "rule": "Late delivery must compare delivered_customer_date to estimated_delivery_date.",
+      "applies_to": []
+    },
+    {
+      "id": "no_cartesian_join",
+      "rule": "Never emit a query that joins two tables without an ON clause.",
+      "applies_to": []
+    },
+    {
+      "id": "no_unfiltered_join",
+      "rule": "Never join order_items to orders without matching on order_id.",
+      "applies_to": []
+    },
+    {
+      "id": "payments_join_on_order_id",
+      "rule": "order_payments must join to orders on order_id.",
+      "applies_to": []
+    },
+    {
+      "id": "reviews_join_on_order_id",
+      "rule": "order_reviews must join to orders on order_id.",
+      "applies_to": []
+    },
+    {
+      "id": "items_join_orders_on_order_id",
+      "rule": "order_items must join to orders on order_id.",
+      "applies_to": []
+    },
+    {
+      "id": "items_join_products_on_product_id",
+      "rule": "order_items must join to products on product_id.",
+      "applies_to": []
+    },
+    {
+      "id": "items_join_sellers_on_seller_id",
+      "rule": "order_items must join to sellers on seller_id.",
+      "applies_to": []
+    },
+    {
+      "id": "customers_join_orders_on_customer_id",
+      "rule": "customers must join to orders on customer_id, not customer_unique_id.",
+      "applies_to": []
+    },
+    {
+      "id": "no_count_star_for_entities",
+      "rule": "Never use COUNT(*) to count entities. Use COUNT(DISTINCT <pk>).",
+      "applies_to": []
+    },
+    {
+      "id": "group_by_must_include_all_non_aggregates",
+      "rule": "Every non-aggregate column in SELECT must appear in GROUP BY.",
+      "applies_to": []
+    },
+    {
+      "id": "no_avg_of_avg",
+      "rule": "Never average an already-averaged value.",
+      "applies_to": []
+    },
+    {
+      "id": "no_sum_of_avg",
+      "rule": "Never sum an already-averaged value.",
+      "applies_to": []
+    },
+    {
+      "id": "no_bare_date_filter",
+      "rule": "Time filters must use order_purchase_timestamp unless the question names another date.",
+      "applies_to": []
+    },
+    {
+      "id": "no_future_orders",
+      "rule": "Never filter on orders with order_purchase_timestamp > NOW().",
+      "applies_to": []
+    },
+    {
+      "id": "now_uses_now_function",
+      "rule": "Current time must come from NOW(), not a hardcoded date.",
+      "applies_to": []
+    },
+    {
+      "id": "no_select_star",
+      "rule": "Never emit SELECT *. Always project explicit columns.",
+      "applies_to": []
+    },
+    {
+      "id": "no_implicit_limit",
+      "rule": "Never add LIMIT unless the question asks for a bounded set.",
+      "applies_to": []
+    },
+    {
+      "id": "no_hardcoded_year",
+      "rule": "Never hardcode a year. Use NOW() - INTERVAL or DATE_TRUNC.",
+      "applies_to": []
+    },
+    {
+      "id": "no_temp_tables",
+      "rule": "Never emit CREATE, DROP, INSERT, UPDATE, DELETE, or TRUNCATE.",
+      "applies_to": []
+    },
+    {
+      "id": "no_comments_in_sql",
+      "rule": "Never emit SQL comments.",
+      "applies_to": []
+    }
+  ],
+  "ambiguities": {
+    "state": {
+      "candidates": [
+        "public.customers.customer_state",
+        "public.sellers.seller_state",
+        "public.geolocation.geolocation_state"
+      ],
+      "disambiguation": "Default to customer_state unless the question mentions sellers or zip codes."
+    },
+    "city": {
+      "candidates": [
+        "public.customers.customer_city",
+        "public.sellers.seller_city",
+        "public.geolocation.geolocation_city"
+      ],
+      "disambiguation": "Default to customer_city unless the question mentions sellers or zip codes."
+    },
+    "zip": {
+      "candidates": [
+        "public.customers.customer_zip_code_prefix",
+        "public.sellers.seller_zip_code_prefix",
+        "public.geolocation.geolocation_zip_code_prefix"
+      ],
+      "disambiguation": "Default to customer_zip_code_prefix unless the question mentions sellers or coordinates."
+    },
+    "region": {
+      "candidates": [
+        "public.customers.customer_state",
+        "public.sellers.seller_state"
+      ],
+      "disambiguation": "Default to customer_state unless the question is about sellers."
+    },
+    "date": {
+      "candidates": [
+        "public.orders.order_purchase_timestamp",
+        "public.orders.order_approved_at",
+        "public.orders.order_delivered_carrier_date",
+        "public.orders.order_delivered_customer_date",
+        "public.orders.order_estimated_delivery_date"
+      ],
+      "disambiguation": "Default to order_purchase_timestamp unless the question names a lifecycle stage."
+    },
+    "amount": {
+      "candidates": [
+        "public.order_payments.payment_value",
+        "public.order_items.price",
+        "public.order_items.freight_value"
+      ],
+      "disambiguation": "Default to payment_value; use order_items.price only if the question says 'item price'; use freight_value only if it says 'shipping'."
+    },
+    "delivery": {
+      "candidates": [
+        "public.orders.order_delivered_customer_date",
+        "public.orders.order_delivered_carrier_date",
+        "public.orders.order_estimated_delivery_date"
+      ],
+      "disambiguation": "Default to order_delivered_customer_date; use carrier_date only if the question mentions the carrier; use estimated_delivery_date only for promise comparisons."
+    },
+    "payment": {
+      "candidates": [
+        "public.order_payments.payment_type",
+        "public.order_payments.payment_value",
+        "public.order_payments.payment_installments"
+      ],
+      "disambiguation": "If the question asks 'how they paid', use payment_type. If 'how much', use payment_value. If 'how many times', use payment_installments."
+    },
+    "product": {
+      "candidates": [
+        "public.products.product_id",
+        "public.products.product_name"
+      ],
+      "disambiguation": "If the question asks 'which product', use product_name. If it asks 'how many products', use product_id."
+    },
+    "review": {
+      "candidates": [
+        "public.order_reviews.review_score",
+        "public.order_reviews.review_comment_message",
+        "public.order_reviews.review_comment_title"
+      ],
+      "disambiguation": "If the question asks about 'rating' or 'stars', use review_score. If about 'text', use review_comment_message."
+    },
+    "customer": {
+      "candidates": [
+        "public.customers.customer_id",
+        "public.customers.customer_unique_id"
+      ],
+      "disambiguation": "Default to customer_unique_id unless the question is about a specific order's customer record."
+    },
+    "revenue": {
+      "candidates": [
+        "metrics.gmv",
+        "metrics.net_revenue",
+        "metrics.product_revenue"
+      ],
+      "disambiguation": "Default to gmv unless the question explicitly says 'net', 'product only', or 'including freight'."
+    },
+    "customer key": {
+      "candidates": [
+        "public.customers.customer_id",
+        "public.orders.customer_id"
+      ],
+      "disambiguation": "Same identifier. Use customers.customer_id when the question is about the customer record; orders.customer_id when filtered by order."
+    },
+    "seller key": {
+      "candidates": [
+        "public.sellers.seller_id",
+        "public.order_items.seller_id"
+      ],
+      "disambiguation": "Same identifier. Use sellers.seller_id for the merchant roster; order_items.seller_id for sales attribution."
+    },
+    "order key": {
+      "candidates": [
+        "public.orders.order_id",
+        "public.order_items.order_id",
+        "public.order_payments.order_id",
+        "public.order_reviews.order_id"
+      ],
+      "disambiguation": "Same identifier. Anchor on orders.order_id for the canonical record; use the other tables' columns for joins."
+    },
+    "product key": {
+      "candidates": [
+        "public.order_items.product_id",
+        "public.products.product_id"
+      ],
+      "disambiguation": "Same identifier. Use products.product_id for the catalog; order_items.product_id for sales."
+    },
+    "item key": {
+      "candidates": [
+        "public.order_items.product_id",
+        "public.products.product_id"
+      ],
+      "disambiguation": "Same as 'product key'. Both refer to the same identifier."
+    },
+    "list price": {
+      "candidates": [
+        "public.order_items.price",
+        "public.products.price"
+      ],
+      "disambiguation": "order_items.price is the transaction price; products.price is the catalog price. Default to order_items.price when the question is about an order."
+    },
+    "order_status": {
+      "candidates": [
+        "public.orders.order_status"
+      ],
+      "disambiguation": "Only one column; declared to document the value_map dependency."
+    },
+    "category": {
+      "candidates": [
+        "public.products.product_category_name"
+      ],
+      "disambiguation": "Only one column; declared to document the value_map dependency."
+    },
+    "score": {
+      "candidates": [
+        "public.order_reviews.review_score"
+      ],
+      "disambiguation": "Only one column; declared to document the value_map dependency."
+    },
+    "name": {
+      "candidates": [
+        "public.products.product_name"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    },
+    "weight": {
+      "candidates": [
+        "public.products.product_weight_g"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    },
+    "height": {
+      "candidates": [
+        "public.products.product_height_cm"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    },
+    "width": {
+      "candidates": [
+        "public.products.product_width_cm"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    },
+    "length": {
+      "candidates": [
+        "public.products.product_length_cm",
+        "public.products.product_name_lenght",
+        "public.products.product_description_lenght"
+      ],
+      "disambiguation": "Default to product_length_cm; use the *_lenght columns only if the question is about text length."
+    },
+    "purchase": {
+      "candidates": [
+        "public.orders.order_purchase_timestamp"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    },
+    "approval": {
+      "candidates": [
+        "public.orders.order_approved_at"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    },
+    "installment": {
+      "candidates": [
+        "public.order_payments.payment_installments"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    },
+    "freight": {
+      "candidates": [
+        "public.order_items.freight_value"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    },
+    "buyer": {
+      "candidates": [
+        "public.customers.customer_unique_id"
+      ],
+      "disambiguation": "Only one meaningful column; declared to document the customer/customer_unique_id distinction."
+    },
+    "merchant": {
+      "candidates": [
+        "public.sellers.seller_id"
+      ],
+      "disambiguation": "Only one column; declared for completeness."
+    }
+  }
+}
